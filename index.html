@@ -215,8 +215,11 @@ C は「悪い」ではない。情報が足りないだけ。追加で貼って
 </main>
 <script>
 const b=document.getElementById('copy'),m=document.getElementById('msg'),t=document.getElementById('src');
+const ok=()=>{m.textContent='コピーしました。AIのチャット欄に貼り付けてください。';};
+const manual=()=>{t.closest('details').open=true;t.focus();t.select();m.textContent='自動コピーできない端末です。下の全文を長押し→すべて選択→コピーしてください。';};
 b.addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(t.value);m.textContent='コピーしました。AIのチャット欄に貼り付けてください。';}
-  catch(e){t.closest('details').open=true;t.focus();t.select();m.textContent='自動コピーできない端末です。下の全文を長押し→すべて選択→コピーしてください。';}
+  try{await navigator.clipboard.writeText(t.value);ok();return;}catch(e){}
+  try{t.closest('details').open=true;t.focus();t.select();t.setSelectionRange(0,t.value.length);if(document.execCommand('copy')){t.closest('details').open=false;ok();return;}}catch(e){}
+  manual();
 });
 </script></body></html>
